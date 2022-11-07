@@ -1,0 +1,52 @@
+<form
+  [formGroup]="questionsFB"
+  class="page-layout flex gap-4 flex-col items- justify-between"
+>
+  <div class="flex flex-col items-start gap-4">
+    <!-- ? Questions  -->
+    <div
+      class="flex flex-col gap-6 py-3 w-full"
+      formArrayName="questions"
+      [class]="questionsFormArray.length ? 'border-b-2 border-b-gray-200' : ''"
+    >
+      <ng-container *ngIf="questionsFormArray.length; else emptyQuestionsList">
+        <app-question
+          *ngFor="let question of questionsFormArray.controls; index as i"
+          [question]="question"
+        ></app-question>
+      </ng-container>
+      <ng-template #emptyQuestionsList>
+        <h2 class="font-bold">Please add some more question</h2>
+      </ng-template>
+    </div>
+
+    <!-- ? Add question button  -->
+    <button
+      class="flex gap-3 items-center btn btn-secondary"
+      (click)="openModal()"
+    >
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <span> Add New Question </span>
+    </button>
+  </div>
+
+  <button
+    class="btn w-max self-end"
+    [class]="
+      !questionsFB.controls.questions.controls.length ||
+      questionsFB.status === 'INVALID'
+        ? 'btn-disabled'
+        : 'btn-primary'
+    "
+    [disabled]="
+      !questionsFB.controls.questions.controls.length ||
+      questionsFB.status === 'INVALID'
+    "
+    type="button"
+    (click)="review()"
+  >
+    Review my answer
+  </button>
+</form>
+
+<app-add-question-modal #dialog></app-add-question-modal>

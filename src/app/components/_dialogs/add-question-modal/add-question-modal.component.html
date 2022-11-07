@@ -1,0 +1,99 @@
+<!-- ?? Modal -->
+<div
+  class="fade fixed top-0 left-0 w-full flex items-center justify-center h-full backdrop-blur-sm bg-gray/30"
+  [class]="isOpen ? 'visible' : 'hidden'"
+>
+  <!-- ?? Form  -->
+  <form
+    [formGroup]="questionFB"
+    class="flex flex-col justify-between shadow bg-gray-100 rounded-md p-5 w-1/2 h-2/3 overflow-y-auto"
+  >
+    <!-- * Header  -->
+
+    <div class="flex flex-col gap-4 overflow-auto">
+      <h2 class="font-bold">Add New Question</h2>
+
+      <div class="body flex flex-col gap-3">
+        <!-- ? Type  -->
+
+        <select
+          class="bg-slate-200 w-max px-3 py-2 h-max rounded-md outline-none border-none self-end"
+          formControlName="type"
+        >
+          <option [value]="1">Paragraph</option>
+          <option [value]="2">Checkbox</option>
+        </select>
+
+        <!-- ? Question content  -->
+
+        <textarea
+          formControlName="content"
+          placeholder="Type question here"
+          class="border-gray-300 border p-3 outline-none rounded-md w-full outline-none"
+          rows="5"
+        ></textarea>
+
+        <!-- ? Options  -->
+
+        <ng-container
+          *ngFor="let option of answerOptions.controls; index as i"
+          formArrayName="answerOptions"
+        >
+          <div class="flex gap-3 w-full items-center" [formGroupName]="i">
+            <input
+              class="w-full h-8 p-3"
+              formControlName="content"
+              [placeholder]="'Enter your question ' + (i + 1)"
+            />
+            <span
+              (click)="removeOption(i)"
+              *ngIf="i > 1"
+              class="hover:text-red-500 cursor-pointer"
+              ><i class="fa fa-remove" aria-hidden="true"></i
+            ></span>
+          </div>
+        </ng-container>
+
+        <!-- ? Add more  -->
+
+        <button
+          *ngIf="isCheckboxQuestion && answerOptions.controls.length <= 3"
+          class="flex gap-3 items-center btn btn-secondary w-max"
+          (click)="addCheckbox()"
+        >
+          <i class="fa fa-plus-circle" aria-hidden="true"></i>
+          <span> Add Answer </span>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <!-- ? Other -->
+        <div *ngIf="isCheckboxQuestion" class="flex gap-3 items-center">
+          <input class="w-5" type="checkbox" formControlName="hasOther" />
+          <span>Allow user to specify their own answer</span>
+        </div>
+
+        <!-- ? Mandatory field ? -->
+
+        <div class="flex gap-3 items-center">
+          <input class="w-5" type="checkbox" formControlName="required" />
+          <span>This field is required</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer flex justify-end gap-3">
+      <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      <button
+        class="btn"
+        (click)="onSubmit()"
+        [class]="
+          questionFB.status === 'INVALID' ? 'btn-disabled' : 'btn-primary'
+        "
+        [disabled]="questionFB.status === 'INVALID'"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

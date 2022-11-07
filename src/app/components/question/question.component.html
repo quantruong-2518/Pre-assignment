@@ -1,0 +1,44 @@
+<form [formGroup]="questionFG" class="flex flex-col gap-3">
+  <div class="flex gap-2">
+    <h2 class="font-bold">{{ question.value.content }}</h2>
+    <span class="text-red-400" *ngIf="question.value.required">*</span>
+  </div>
+
+  <ng-container
+    formArrayName="answerOptions"
+    class="flex gap-3"
+    *ngFor="let option of answerOptions.controls; index as i; last as isLast"
+  >
+    <ng-container
+      *ngIf="isParagraphQuestion; else checkboxes"
+      [formGroupName]="i"
+    >
+      <textarea
+        class="border-gray-300 border p-3 outline-none rounded-md w-full"
+        rows="5"
+        placeholder="Fill your answer here..."
+        formControlName="content"
+      ></textarea>
+    </ng-container>
+
+    <ng-template #checkboxes [formGroupName]="i">
+      <div class="flex flex-col gap-3 items-start">
+        <div class="flex gap-3 items-center">
+          <input
+            class="cursor-pointer"
+            type="checkbox"
+            formControlName="checked"
+          />
+          <span>{{ option.value.content }} </span>
+        </div>
+        <textarea
+          (change)="changeOtherAnswer($event)"
+          class="border-gray-300 border p-3 outline-none rounded-md w-full"
+          rows="5"
+          *ngIf="question.value.hasOther && isLast && option.value.checked"
+          placeholder="Fill your own answer"
+        ></textarea>
+      </div>
+    </ng-template>
+  </ng-container>
+</form>

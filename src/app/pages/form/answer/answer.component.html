@@ -1,0 +1,18 @@
+<div class="page-layout flex flex-col justify-between">
+  <div class="flex flex-col gap-4">
+    <h2 class="font-bold">Your answers</h2>
+    <div
+      *ngFor="let question of questions; last as isLast; index as idx"
+      class="flex flex-col items-start gap-2 py-2"
+      [class]="isLast ? 'border-none' : 'border-b'"
+    >
+      <h2 class="font-bold">{{ idx + 1 + ". " + question.content }}</h2>
+
+      <span *ngFor="let answer of question.answerOptions">
+        {{ answer.content }}
+      </span>
+    </div>
+  </div>
+
+  <button class="self-start" (click)="backToBuilder()"><u>Back to Forms Builder</u></button>
+</div>
